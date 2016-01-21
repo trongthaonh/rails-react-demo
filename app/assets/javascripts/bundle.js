@@ -48,11 +48,11 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _TweetBox = __webpack_require__(2);
+	var _TweetBox = __webpack_require__(1);
 
 	var _TweetBox2 = _interopRequireDefault(_TweetBox);
 
-	var _TweetList = __webpack_require__(3);
+	var _TweetList = __webpack_require__(2);
 
 	var _TweetList2 = _interopRequireDefault(_TweetList);
 
@@ -83,14 +83,29 @@
 	  _createClass(Main, [{
 	    key: 'addTweet',
 	    value: function addTweet(tweetToAdd) {
-	      var newTweetsList = this.state.tweetsList;
-	      newTweetsList.unshift({
-	        id: Date.now(),
-	        name: "Guest",
-	        body: tweetToAdd
-	      });
+	      var _this2 = this;
 
-	      this.setState({ tweetsList: newTweetsList });
+	      $.post("/tweets", { tweet: tweetToAdd }).success(function (savedTweet) {
+	        var newTweetsList = _this2.state.tweetsList;
+	        newTweetsList.unshift(savedTweet);
+	        _this2.setState({ tweetsList: newTweetsList });
+	      }).error(function (error) {
+	        return console.log(error);
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+
+	    // Invoked once, only on the client (not on the server), immediately after the initial rendering occurs
+	    // Interactive with api directly HERE!!!
+	    value: function componentDidMount() {
+	      var _this3 = this;
+
+	      $.ajax("/tweets").success(function (data) {
+	        return _this3.setState({ tweetsList: data });
+	      }).error(function (error) {
+	        return console.log(error);
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -117,8 +132,7 @@
 	$(documentReady);
 
 /***/ },
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -182,7 +196,7 @@
 	exports.default = TweetBox;
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -195,7 +209,7 @@
 	  value: true
 	});
 
-	var _Tweet = __webpack_require__(4);
+	var _Tweet = __webpack_require__(3);
 
 	var _Tweet2 = _interopRequireDefault(_Tweet);
 
@@ -240,7 +254,7 @@
 	exports.default = TweetList;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
