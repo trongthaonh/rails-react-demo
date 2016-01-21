@@ -123,7 +123,7 @@
 	      return React.createElement(
 	        'div',
 	        { className: 'container' },
-	        React.createElement(_TweetBox2.default, { sendTweet: this.addTweet.bind(this) }),
+	        React.createElement(_TweetBox2.default, null),
 	        React.createElement(_TweetList2.default, { tweets: this.state.tweetsList })
 	      );
 	    }
@@ -143,7 +143,7 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -152,6 +152,12 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _TweetActions = __webpack_require__(4);
+
+	var _TweetActions2 = _interopRequireDefault(_TweetActions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -172,7 +178,7 @@
 	    key: "sendTweet",
 	    value: function sendTweet(event) {
 	      event.preventDefault();
-	      this.props.sendTweet(this.refs.tweetTextArea.value);
+	      _TweetActions2.default.sendTweet(this.refs.tweetTextArea.value);
 	      this.refs.tweetTextArea.value = "";
 	    }
 	  }, {
@@ -325,6 +331,9 @@
 	exports.default = {
 	  getAllTweets: function getAllTweets() {
 	    _API2.default.getAllTweets();
+	  },
+	  sendTweet: function sendTweet(body) {
+	    _API2.default.createTweet(body);
 	  }
 	};
 
@@ -348,6 +357,13 @@
 	  getAllTweets: function getAllTweets() {
 	    $.get("/tweets").success(function (rawTweets) {
 	      return _ServerActions2.default.receivedTweets(rawTweets);
+	    }).error(function (error) {
+	      return console.log(error);
+	    });
+	  },
+	  createTweet: function createTweet(body) {
+	    $.post("/tweets", { tweet: body }).success(function (rawTweet) {
+	      return _ServerActions2.default.receivedOneTweet(rawTweet);
 	    }).error(function (error) {
 	      return console.log(error);
 	    });
@@ -379,6 +395,12 @@
 	    _dispatcher2.default.dispatch({
 	      actionType: _constants2.default.RECEIVED_TWEETS,
 	      rawTweets: rawTweets
+	    });
+	  },
+	  receivedOneTweet: function receivedOneTweet(rawTweet) {
+	    _dispatcher2.default.dispatch({
+	      actionType: _constants2.default.RECEIVED_ONE_TWEET,
+	      rawTweet: rawTweet
 	    });
 	  }
 	};
@@ -816,7 +838,8 @@
 	  value: true
 	});
 	exports.default = {
-	  RECEIVED_TWEETS: 'RECEIVED_TWEETS'
+	  RECEIVED_TWEETS: 'RECEIVED_TWEETS',
+	  RECEIVED_ONE_TWEET: 'RECEIVED_ONE_TWEET'
 	};
 
 /***/ },
@@ -902,6 +925,9 @@
 	      TweetStore.emitChange();
 	      break;
 
+	    case _constants2.default.RECEIVED_ONE_TWEET:
+	      _tweets.unshift(action.rawTweet);
+	      TweetStore.emitChange();
 	    default:
 	    // No action
 	  }
