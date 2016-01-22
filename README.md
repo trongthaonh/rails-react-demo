@@ -1,5 +1,6 @@
-# React on rails follow Flux pattern example
-This project is written with ES6 and uses `Babel` to transpile to ES5.
+#React on rails follow Flux pattern example
+
+######This project is written with ES6 and uses `Babel` to transpile to ES5.
 
 
 ## Installing
@@ -17,7 +18,6 @@ Run app:
 
     $ rails s
     Then direct a browser to http://localhost:3000/
-
 
 ##TODO
 - Add react-router
