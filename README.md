@@ -8,7 +8,9 @@
     $ git clone git@github.com:trongthaonh/rails-react-demo.git
     $ cd rails-react-demo
     $ bundle install
-    $ rake db:migrate
+    
+    Update config/database.yml
+    $ rake db:create db:migrate
 
 To install packages:
 
